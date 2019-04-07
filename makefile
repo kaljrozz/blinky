@@ -41,7 +41,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.s
 
 # Regular Rules
 
-all: $(BIN_DIR)/$(TARGET).bin $(BIN_DIR)/$(TARGET).hex
+all: $(BIN_DIR)/$(TARGET).bin $(BIN_DIR)/$(TARGET).hex $(BIN_DIR)/$(TARGET).elf
 
 $(BIN_DIR)/$(TARGET).bin: $(BIN_DIR)/$(TARGET).elf
 	@$(OBJCOPY) -O binary $^ $@
@@ -67,6 +67,5 @@ clean:
 	@rm -f $(BIN_DIR)/$(TARGET).hex
 	@rm -f $(BIN_DIR)/$(TARGET).bin
 	@rm -f $(OBJ_DIR)/$(TARGET).map
-	@echo 'rm bin/* obj/*'
 
 # EOF
