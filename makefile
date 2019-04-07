@@ -6,6 +6,8 @@ OBJ_DIR = obj
 SRC_DIR = src
 INC_DIR = inc
 BIN_DIR = bin
+
+# Final Executable Name
 TARGET = runme
 
 # Define File Variables
