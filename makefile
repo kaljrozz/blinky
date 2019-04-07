@@ -3,8 +3,9 @@
 
 # Compile and Link Flags
 
-CFLAGS = -g -Wall -mthumb -mcpu=cortex-m4 -I$(INC_DIR)
-LDFLAGS = -Wl,-Map=$(OBJ_DIR)/$(TARGET).map,-T$(LD_SCRIPT),-lnosys
+CFLAGS = -g -Wall -I$(INC_DIR)
+LDFLAGS = -Wl,-Map=$(OBJ_DIR)/$(TARGET).map,-T$(LD_SCRIPT),-lnosys,-lm,-lc,-lgcc
+CPU = -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
 
 # Directory Structure
 
@@ -26,16 +27,16 @@ LD_SCRIPT := $(wildcard *.ld)
 CC = arm-none-eabi-gcc
 OBJCOPY = arm-none-eabi-objcopy
 STFLASH = st-flash
-FLASH_ADDR = 0x8000000
+FLASH_ADDR = 0x08000000
 
 # Implicit Rules
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@$(CC) $(CFLAGS) -c -o $@ $^
+	@$(CC) $(CPU) $(CFLAGS) -c -o $@ $^
 	@echo "$^ => $@"
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.s
-	@$(CC) $(CFLAGS) -c -o $@ $^
+	@$(CC) $(CPU) $(CFLAGS) -c -o $@ $^
 	@echo "$^ => $@"
 
 # Regular Rules
@@ -51,28 +52,21 @@ $(BIN_DIR)/$(TARGET).hex: $(BIN_DIR)/$(TARGET).elf
 	@echo "$^ => $@"
 
 $(BIN_DIR)/$(TARGET).elf: $(OBJECTS)
-	@$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+	@$(CC) $(CPU) $(LDFLAGS) -o $@ $^
 	@echo "$^ => $@"
 
 flash: all
-	$(STFLASH) write $(BIN_DIR)/$(TARGET).bin $(FLASH_ADDR)
+	@$(STFLASH) write $(BIN_DIR)/$(TARGET).bin $(FLASH_ADDR)
 
 # Phony Rules
 
-.PHONY: clean print
-
+.PHONY: clean
 clean:
 	@rm -f $(OBJECTS)
 	@rm -f $(BIN_DIR)/$(TARGET).elf
 	@rm -f $(BIN_DIR)/$(TARGET).hex
 	@rm -f $(BIN_DIR)/$(TARGET).bin
 	@rm -f $(OBJ_DIR)/$(TARGET).map
+	@echo 'rm bin/* obj/*'
 
-print:
-	@echo "CC = $(CC)"
-	@echo "OBJCOPY = $(OBJCOPY)"
-	@echo "CFLAGS = $(CFLAGS)"
-	@echo "LDFLAGS = $(LDFLAGS)"
-	@echo "SOURCES = $(SOURCES)"
-	@echo "OBJECTS = $(OBJECTS)"
-	@echo "LD_SCRIPT = $(LD_SCRIPT)"
+# EOF
