@@ -15,7 +15,7 @@ SOURCES := $(wildcard $(SRC_DIR)/*)
 OBJECTS := $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SOURCES))
 OBJECTS := $(patsubst $(SRC_DIR)%.s, $(OBJ_DIR)%.o, $(OBJECTS))
 
-# Define Linker Script Variable
+# Linker Script Location
 LD_SCRIPT = STM32F407VGTx_FLASH.ld
 
 # Define Toolchain Variables
@@ -41,19 +41,21 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.s
 	@echo "$^ => $@"
 
 # Regular Rules
-all: $(BIN_DIR)/$(TARGET).bin $(BIN_DIR)/$(TARGET).hex $(BIN_DIR)/$(TARGET).elf
+all: $(OBJ_DIR) $(BIN_DIR) $(BIN_DIR)/$(TARGET).bin $(BIN_DIR)/$(TARGET).elf
 
 $(BIN_DIR)/$(TARGET).bin: $(BIN_DIR)/$(TARGET).elf
 	@$(OBJCOPY) -O binary $^ $@
 	@echo "$^ => $@"
 
-$(BIN_DIR)/$(TARGET).hex: $(BIN_DIR)/$(TARGET).elf
-	@$(OBJCOPY) -O ihex $^ $@
-	@echo "$^ => $@"
-
 $(BIN_DIR)/$(TARGET).elf: $(OBJECTS)
 	@$(CC) $(CPU) $(LDFLAGS) -o $@ $^
 	@echo "$^ => $@"
+
+$(BIN_DIR):
+	@mkdir $(BIN_DIR)
+
+$(OBJ_DIR):
+	@mkdir $(OBJ_DIR)
 
 flash: all
 	@$(STFLASH) write $(BIN_DIR)/$(TARGET).bin $(FLASH_ADDR)
