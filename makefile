@@ -65,7 +65,6 @@ flash: all
 clean:
 	@rm -f $(OBJECTS)
 	@rm -f $(BIN_DIR)/$(TARGET).elf
-	@rm -f $(BIN_DIR)/$(TARGET).hex
 	@rm -f $(BIN_DIR)/$(TARGET).bin
 	@rm -f $(OBJ_DIR)/$(TARGET).map
 
