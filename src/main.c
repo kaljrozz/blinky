@@ -8,7 +8,7 @@ void TIM2_IRQHandler(void){
     /* toggle green led on GPIOD pin 12 */
     GPIOD->ODR ^= (1 << 12);
     /* clear interrupt flag */
-    TIM2->SR = 0;
+    TIM2->SR &= ~1;
 }
 int main(void){
     /* enable GPIOD clock */
@@ -28,8 +28,8 @@ int main(void){
     TIM2->PSC = 999;
     TIM2->ARR = 15999;
 
-    /* enable autoreload on TIM2 and then start TIM2 */
-    TIM2->CR1 |= TIM_CR1_ARPE | TIM_CR1_CEN;
+    /* enable TIM2 */
+    TIM2->CR1 |= TIM_CR1_CEN;
 
     while(1);
     return 0;
