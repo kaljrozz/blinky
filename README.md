@@ -10,7 +10,7 @@
 ## Compiling Instructions
 > Make sure your discovery board is plugged into your computer, and that you have the required tools installed. Then use your shell to clone the git repository and compile/flash your board.
 ```
-git clone https://github.com/kaljrozz/blinky.git
+git clone https://github.com/kolazojar/blinky.git
 cd blinky
 make flash
 ```
